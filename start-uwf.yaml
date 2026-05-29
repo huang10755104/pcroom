@@ -1,0 +1,17 @@
+- hosts: all
+  gather_facts: yes
+  vars:
+    ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+  tasks:
+    - name: start UWF
+      ansible.windows.win_shell: uwfmgr filter enable
+      register: result
+      args:
+        output_encoding_override: big5   
+
+    - name: reboot
+      ansible.windows.win_shell: shutdown -r -t 1
+      args:
+        output_encoding_override: big5
+
+    - debug: msg="{{ result.stdout }}"

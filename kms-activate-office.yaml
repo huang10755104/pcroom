@@ -1,0 +1,17 @@
+- hosts: all
+  gather_facts: yes
+  tasks:
+    - name: set kms server
+      ansible.windows.win_shell: cscript OSPP.VBS /sethst:kms-v4.cc.ncu.edu.tw
+      args:
+        output_encoding_override: big5
+        chdir: C:\Program Files\Microsoft Office\Office16\   
+
+    - name: activate office
+      register: result
+      ansible.windows.win_shell: cscript OSPP.VBS /act
+      args:
+        output_encoding_override: big5
+        chdir: C:\Program Files\Microsoft Office\Office16\
+
+    - debug: msg="{{ result.stdout }}"
