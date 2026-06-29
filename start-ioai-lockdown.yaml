@@ -1,0 +1,26 @@
+- hosts: all
+  gather_facts: yes
+  vars:
+    ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+  tasks:
+    - name: Block all URLs in Chrome
+      ansible.windows.win_shell: reg add "HKLM\SOFTWARE\Policies\Google\Chrome\URLBlocklist" /v "1" /t REG_SZ /d "*" /f
+
+    - name: Add Chrome URL allowlist
+      ansible.windows.win_shell: reg add "HKLM\SOFTWARE\Policies\Google\Chrome\URLAllowlist" /v "{{ item.key }}" /t REG_SZ /d "{{ item.val }}" /f
+      loop:
+        - { key: '1', val: 'https://*.python.org' }
+        - { key: '2', val: 'https://*.pypi.org' }
+        - { key: '3', val: 'https://*.numpy.org' }
+        - { key: '4', val: 'https://*.pydata.org' }
+        - { key: '5', val: 'https://*.scikit-learn.org' }
+        - { key: '6', val: 'https://*.pytorch.org' }
+        - { key: '7', val: 'https://*.matplotlib.org' }
+        - { key: '8', val: 'https://*.scipy.org' }
+        - { key: '9', val: 'https://huggingface.co/docs' }
+    
+        - { key: '10', val: '203.145.215.*' }
+        - { key: '11', val: '203.145.218.*' }
+        - { key: '12', val: '203.145.222.*' }
+        - { key: '13', val: '103.124.75.*' }
+# Bash: ansible-playbook -i A206.yaml start-ioai-lockdown.yaml
